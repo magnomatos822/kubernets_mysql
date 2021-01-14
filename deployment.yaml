@@ -11,16 +11,31 @@ spec:
     metadata:
       labels:
         app: mysql-server
+        tier: db
     spec:
       containers:
-      - name: mysql-server
-        image: mysql:5.7
-        resources:
+        - name: mysql-server
+          image: mysql:5.7
+          resources:
+          requests:
+            cpu: 100m
+            memory: 100Mi
           limits:
-            memory: "128Mi"
-            cpu: "500m"
-        ports:
-        - containerPort: 3306
-        env:
-          - name: MYSQL_ROOT_PASSWORD
-            value: root
+            cpu: 100m
+            memory: 100Mi
+          args:
+            - "--ignore-db-dir+lost+found"
+          ports:
+            - containerPort: 3306
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              value: root
+          volumeMounts:
+            - mountPath: /var/lib/mysql
+              name: mysql-persistent-storage
+      volumes:
+        - name: mysql-persistent-storage
+          persistentVolumeClaim:
+            claimName: PersistentVolumeClaim
+
+    restartPolicy: Always
