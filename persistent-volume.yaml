@@ -6,7 +6,6 @@ metadata:
   labels:
     app: mysql-pv-claim
 spec:
-  storageClassName: rook-ceph-block
   accessModes:
     - ReadWriteOnce
   resources:
